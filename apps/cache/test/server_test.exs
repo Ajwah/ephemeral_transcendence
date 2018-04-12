@@ -45,8 +45,6 @@ defmodule ServerTest do
     assert retrieved_value == the_value
   end
 
-  @tag combine: true
-  @tag timeout: 300_000
   test "#get by a non-existent key fails gracefully." do
     {state, action, result} = Server.get(:non_existent)
 
@@ -54,15 +52,18 @@ defmodule ServerTest do
   end
 
   @eviction_threshold Application.get_env(:cache, :eviction_policy)[:threshold]
-  @tag combine: true
   @tag big_one: true
   @tag timeout: 300_000
-  test "server is able to store a large qauntity of items" do
-    max = 1_000_000
+  @mix_command """
+    iex --erl "+P 5000000" -S mix test test/server_test.exs --only big_one:true
+  """
+  test "server is able to store a large quantity of items" do
+    IO.inspect("Kindly take note that this test needs to run wih erlang options to increase amount processes from a mere thousand to a large number: #{@mix_command}")
+    max = 10_000 # up to a million
     1..max
     |> Enum.map(fn i ->
       if rem(i, 10_000) == 0 do
-        IO.inspect(i, label: :counter)
+        IO.inspect(i, label: :counter_of_processes)
       end
       key = "a_#{i}"
         |> String.to_atom
