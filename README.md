@@ -86,3 +86,4 @@ Going forward, the following matters still need to be addressed:
 5. Introduce better benchmarking standards as currently I have employed a very naive way of establishing them.
 6. Implement other eviction policies.
 7. Bring transcendence into the equation by multinode replication.
+8. A very important flaw in current implementation is to use atoms as keys, which is bad as they are user supplied and can end up crashing the node. This needs to be replaced with a registry that uses strings as keys instead.
